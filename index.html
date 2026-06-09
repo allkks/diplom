@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Онлайн-каталог услуг — Школа салонного бизнеса «Кристи»</title>
+    <!-- Прямое подключение файла стилей без тегов Django -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -147,8 +148,8 @@
                     </div>
                 </div>
                 <div class="contact-form-container">
-                    <!-- Замените YOUR_ACCESS_KEY_HERE на ключ с сайта web3forms.com -->
                     <form action="https://api.web3forms.com/submit" method="POST" id="feedbackForm" class="contact-form">
+                        <!-- Сюда можно вставить свой ключ от web3forms.com для работы формы -->
                         <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
                         <input type="hidden" name="subject" value="Новое сообщение с сайта Кристи">
                         <div class="form-group">
@@ -196,7 +197,6 @@
             <button class="modal-close" id="modalCloseBtn">&times;</button>
             <h3>Заявка на обучение</h3>
             <p>Вы выбрали курс: <strong id="selectedCourseName" style="color: #7c2d12;"></strong></p>
-            <!-- Замените YOUR_ACCESS_KEY_HERE на ключ с сайта web3forms.com -->
             <form action="https://api.web3forms.com/submit" method="POST" id="modalForm" class="contact-form" style="padding: 0; border: none; box-shadow: none;">
                 <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
                 <input type="hidden" name="subject" value="Новая заявка на курс">
@@ -214,6 +214,7 @@
         </div>
     </div>
 
+    <!-- Подключение JS -->
     <script src="script.js"></script>
 </body>
 </html>
