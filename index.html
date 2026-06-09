@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Онлайн-каталог услуг — Школа салонного бизнеса «Кристи»</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">
+                <span class="logo-accent">КРИСТИ</span> <span class="logo-sub">Школа бизнеса</span>
+            </div>
+            <nav class="nav-menu" id="navMenu">
+                <a href="#catalog" class="nav-link">Каталог курсов</a>
+                <a href="#about" class="nav-link">О школе</a>
+                <a href="#license" class="nav-link">Лицензия</a>
+                <a href="#contacts" class="nav-link">Контакты</a>
+            </nav>
+            <div class="header-actions">
+                <button class="btn btn-sm btn-primary open-modal-btn" data-course="Общая консультация">Записаться на курс</button>
+                <button class="burger-menu" id="burgerBtn" aria-label="Открыть меню">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero reveal-section">
+            <div class="container hero-grid">
+                <div class="hero-content">
+                    <div class="badge">АНО ДПО «Школа салонного бизнеса «Кристи»</div>
+                    <h1>Профессиональное обучение в индустрии красоты</h1>
+                    <p class="lead">Получите востребованную специальность в сфере косметологии, массажа и управления салонным бизнесом с выдачей документов установленного образца.</p>
+                    <div class="hero-actions-group">
+                        <a href="#catalog" class="btn btn-lg btn-primary">Перейти к каталогу</a>
+                        <a href="#about" class="btn btn-lg btn-secondary">Узнать о школе</a>
+                    </div>
+                </div>
+                <aside class="info-panel">
+                    <div class="panel-header">
+                        <span class="status-indicator"></span>
+                        <h4>Государственный стандарт</h4>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-value">Лицензия</span>
+                        <span class="metric-label">№ Л035-01218-30/0023412</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-value">15+ лет</span>
+                        <span class="metric-label">Успешной подготовки специалистов</span>
+                    </div>
+                    <div class="panel-footer">
+                        <p>Выдача дипломов и удостоверений гос. образца</p>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="section reveal-section" id="about">
+            <div class="container">
+                <div class="about-grid">
+                    <div class="about-text">
+                        <h2>Обучение в АНО ДПО «Кристи»</h2>
+                        <p>Наша школа предоставляет профессиональную подготовку и повышение квалификации как для начинающих специалистов, так и для действующих руководителей салонного бизнеса. Мы совмещаем глубокую теоретическую базу с обязательной практической отработкой на моделях-добровольцах под контролем опытных преподавателей-практиков.</p>
+                    </div>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">🎓</div>
+                            <div>
+                                <strong>Официальный диплом</strong>
+                                <p>Данные о прохождении обучения вносятся в федеральный реестр ФИС ФРДО.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">💼</div>
+                            <div>
+                                <strong>Практика и материалы</strong>
+                                <p>Предоставляем профессиональную косметику и моделей на время практических занятий.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-muted reveal-section" id="catalog">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Каталог образовательных программ</h2>
+                    <p class="section-subtitle">Выберите интересующее направление обучения для ознакомления со стоимостью и программой</p>
+                </div>
+
+                <div class="tabs-nav">
+                    <button class="tab-btn active" data-filter="all">Все направления</button>
+                    <button class="tab-btn" data-filter="cosmetology">Косметология</button>
+                    <button class="tab-btn" data-filter="massage">Массажные техники</button>
+                    <button class="tab-btn" data-filter="business">Управление бизнесом</button>
+                </div>
+
+                <!-- Контейнер для динамического вывода курсов через JS -->
+                <div class="services-grid" id="catalogGrid">
+                    <div class="loading-indicator">Загрузка каталога...</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section reveal-section" id="license">
+            <div class="container license-section">
+                <div class="about-grid">
+                    <div class="license-mock-img">
+                        <div class="license-paper">
+                            <div class="license-header-seal"></div>
+                            <div class="license-line"></div>
+                            <div class="license-line short"></div>
+                            <div class="license-line"></div>
+                        </div>
+                    </div>
+                    <div class="license-text">
+                        <h2>Официальный статус обучения</h2>
+                        <p>АНО ДПО «Кристи» осуществляет образовательную деятельность на основании лицензии Департамента образования. Все реализуемые программы разработаны в строгом соответствии с федеральными государственными требованиями и профстандартами Министерства труда РФ.</p>
+                        <p>После успешного прохождения итоговой аттестации выпускники получают документы (Дипломы о профессиональной переподготовке или Удостоверения о повышении квалификации), которые вносятся в единый государственный реестр.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-muted reveal-section" id="contacts">
+            <div class="container contact-grid">
+                <div class="contact-info">
+                    <h2>У вас возникли вопросы?</h2>
+                    <p class="lead">Свяжитесь с приемной комиссией школы «Кристи» для подбора программы обучения и консультации по графику занятий.</p>
+                    <div class="contact-details">
+                        <div class="detail-block">
+                            <h5>Адрес учебного центра</h5>
+                            <p>г. Екатеринбург, ул. Куйбышева, д. 44Д</p>
+                        </div>
+                        <div class="detail-block">
+                            <h5>Телефон приемной комиссии</h5>
+                            <p>+7 (343) 222-11-00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form-container">
+                    <!-- Замените YOUR_ACCESS_KEY_HERE на ключ с сайта web3forms.com -->
+                    <form action="https://api.web3forms.com/submit" method="POST" id="feedbackForm" class="contact-form">
+                        <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+                        <input type="hidden" name="subject" value="Новое сообщение с сайта Кристи">
+                        <div class="form-group">
+                            <label for="name">Ваше имя</label>
+                            <input type="text" name="name" id="name" required placeholder="Мария">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Контактный E-mail / Телефон</label>
+                            <input type="text" name="contact" id="email" required placeholder="+7 (999) 000-00-00">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Интересующее направление или вопрос</label>
+                            <textarea name="message" id="message" rows="4" required placeholder="Меня интересует курс эстетической косметологии..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Отправить запрос</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid-container">
+            <div>
+                <p class="footer-logo">АНО ДПО «Школа «Кристи»</p>
+                <p class="footer-desc">Лицензированное образовательное учреждение дополнительного профессионального образования в сфере индустрии красоты.</p>
+            </div>
+            <div>
+                <h5>Разделы каталога</h5>
+                <ul class="footer-links">
+                    <li><a href="#catalog">Косметология</a></li>
+                    <li><a href="#catalog">Массажные методики</a></li>
+                    <li><a href="#catalog">Управление салонами</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 АНО ДПО «Школа салонного бизнеса «Кристи»». Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Модальное окно -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-window">
+            <button class="modal-close" id="modalCloseBtn">&times;</button>
+            <h3>Заявка на обучение</h3>
+            <p>Вы выбрали курс: <strong id="selectedCourseName" style="color: #7c2d12;"></strong></p>
+            <!-- Замените YOUR_ACCESS_KEY_HERE на ключ с сайта web3forms.com -->
+            <form action="https://api.web3forms.com/submit" method="POST" id="modalForm" class="contact-form" style="padding: 0; border: none; box-shadow: none;">
+                <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+                <input type="hidden" name="subject" value="Новая заявка на курс">
+                <input type="hidden" name="chosen_course" id="courseInput">
+                <div class="form-group">
+                    <label for="modalName">Ваше имя</label>
+                    <input type="text" name="name" id="modalName" required>
+                </div>
+                <div class="form-group">
+                    <label for="modalPhone">Номер телефона</label>
+                    <input type="tel" name="phone" id="modalPhone" required placeholder="+7 (999) 000-00-00">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Забронировать место</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
