@@ -1,14 +1,14 @@
 /* ==========================================================================
-   1. ПЕРЕМЕННЫЕ И БАЗОВЫЕ НАСТРОЙКИ
+   1. ПЕРЕМЕННЫЕ И БАЗОВЫЕ НАСТРОЙКИ (НОВАЯ ХВОЙНО-ЗОЛОТАЯ ГАММА)
    ========================================================================== */
 :root {
     --primary: #2d4a22;          /* Глубокий хвойно-зеленый (основной цвет) */
-    --primary-hover: #1c3314;    /* Темно-зеленый при наведении */
+    --primary-hover: #1c3014;    /* Темно-зеленый при наведении */
     --accent: #c5a880;           /* Золотистый шампань (акценты, рамки) */
     --accent-dark: #8a6f4e;      /* Темное золото (цены, важные метки) */
-    --bg-light: #fcfdfa;         /* Нежный травяно-кремовый фон сайта */
-    --bg-muted: #f1f3ee;         /* Мягкий мятно-серый фон для блоков */
-    --text-dark: #192015;        /* Насыщенный темно-зеленый для контрастного текста */
+    --bg-light: #fbfcf9;         /* Нежный травяно-кремовый фон сайта */
+    --bg-muted: #f2f4f0;         /* Мягкий мятно-серый фон для блоков */
+    --text-dark: #192015;        /* Насыщенный темно-зеленый для текста */
     --text-muted: #5a6255;       /* Приглушенный оливково-серый для описаний */
     --white: #ffffff;
     --border: #e2e6df;           /* Деликатная светлая граница */
@@ -96,7 +96,6 @@ img {
 }
 
 .btn-block {
-    display: width;
     width: 100%;
 }
 
@@ -104,7 +103,7 @@ img {
    3. ШАПКА САЙТА (HEADER)
    ========================================================================== */
 .site-header {
-    background-color: rgba(253, 251, 247, 0.95);
+    background-color: rgba(251, 252, 249, 0.95);
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
@@ -213,6 +212,7 @@ img {
     line-height: 1.15;
     margin-bottom: 20px;
     font-weight: 800;
+    color: var(--text-dark);
 }
 
 .hero-content .lead {
@@ -311,6 +311,7 @@ img {
     font-size: 2.25rem;
     margin-bottom: 15px;
     font-weight: 700;
+    color: var(--primary);
 }
 
 .section-subtitle {
@@ -328,6 +329,7 @@ img {
 .about-text h2 {
     font-size: 2.25rem;
     margin-bottom: 20px;
+    color: var(--primary);
 }
 
 .about-text p {
@@ -355,6 +357,7 @@ img {
     display: block;
     font-size: 1.1rem;
     margin-bottom: 5px;
+    color: var(--primary);
 }
 
 .feature-item p {
