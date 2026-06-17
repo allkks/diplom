@@ -2,11 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход | Панель управления АИС «Каталог Кристи» — Django</title>
     <style>
         :root {
-            --primary: #2d4a22; /* Наш хвойно-зеленый цвет */
+            --primary: #2d4a22;
             --primary-hover: #1c3014;
             --accent: #c5a880;
             --bg: #f2f4f0;
@@ -17,110 +16,29 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--text-dark);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            margin: 0; padding: 0;
+            display: flex; align-items: center; justify-content: center; height: 100vh;
         }
         .login-container {
-            width: 100%;
-            max-width: 400px;
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            overflow: hidden;
+            width: 100%; max-width: 400px;
+            background: #fff; border: 1px solid var(--border); border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden;
         }
         .login-header {
-            background-color: #1c2519;
-            padding: 20px;
-            text-align: center;
-            border-bottom: 3px solid var(--accent);
+            background-color: #1c2519; padding: 20px; text-align: center; border-bottom: 3px solid var(--accent);
         }
-        .login-header h1 {
-            color: #fff;
-            margin: 0;
-            font-size: 1.3rem;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-        }
-        .login-header span {
-            color: var(--accent);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            display: block;
-            margin-top: 5px;
-        }
-        .login-body {
-            padding: 30px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .form-group label {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #5a6255;
-        }
-        .form-group input {
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            font-size: 0.95rem;
-            outline: none;
-            background-color: #fafbfa;
-            transition: 0.2s;
-        }
-        .form-group input:focus {
-            border-color: var(--primary);
-            background-color: #fff;
-        }
-        .btn-submit {
-            background-color: var(--primary);
-            color: #fff;
-            padding: 12px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            transition: 0.2s;
-            margin-top: 10px;
-        }
-        .btn-submit:hover {
-            background-color: var(--primary-hover);
-        }
-        .error-message {
-            color: #ef4444;
-            font-size: 0.85rem;
-            margin-bottom: 15px;
-            display: none;
-            text-align: center;
-            font-weight: 600;
-        }
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.85rem;
-            color: #5a6255;
-            text-decoration: none;
-        }
-        .back-link:hover {
-            color: var(--primary);
-            text-decoration: underline;
-        }
+        .login-header h1 { color: #fff; margin: 0; font-size: 1.3rem; font-weight: 800; }
+        .login-header span { color: var(--accent); font-size: 0.8rem; text-transform: uppercase; margin-top: 5px; display: block; }
+        .login-body { padding: 30px; }
+        .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-size: 0.9rem; font-weight: 600; color: #5a6255; }
+        .form-group input { padding: 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.95rem; outline: none; }
+        .btn-submit { background-color: var(--primary); color: #fff; padding: 12px; font-size: 0.95rem; font-weight: 700; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
+        .btn-submit:hover { background-color: var(--primary-hover); }
+        .error-message { color: #ef4444; font-size: 0.85rem; margin-bottom: 15px; display: none; text-align: center; font-weight: 600; }
     </style>
 </head>
 <body>
-
     <div class="login-container">
         <div class="login-header">
             <h1>КРИСТИ ЛМС</h1>
@@ -130,28 +48,22 @@
             <div class="error-message" id="errorMsg">Неверный логин или пароль!</div>
             <form id="loginForm">
                 <div class="form-group">
-                    <label for="username">Имя пользователя / Email</label>
+                    <label>Имя пользователя / Email</label>
                     <input type="text" id="username" required placeholder="admin@kristi.ru">
                 </div>
                 <div class="form-group">
-                    <label for="password">Пароль</label>
+                    <label>Пароль</label>
                     <input type="password" id="password" required placeholder="••••••••">
                 </div>
                 <button type="submit" class="btn-submit">Войти в панель</button>
             </form>
-            <a href="../index.html" class="back-link">← Вернуться на сайт</a>
+            <a href="../index.html" style="display:block; text-align:center; margin-top:20px; font-size:0.85rem; color:#5a6255; text-decoration:none;">← Вернуться на сайт</a>
         </div>
     </div>
 
     <script>
-        // Инициализация локальной базы данных пользователей в системе
-        let usersDB = JSON.parse(localStorage.getItem('kristi_users'));
-        if (!usersDB) {
-            usersDB = [
-                { username: "admin@kristi.ru", password: "admin", name: "Иван Козлов" }
-            ];
-            localStorage.setItem('kristi_users', JSON.stringify(usersDB));
-        }
+        const DB_URL = 'ВСТАВЬТЕ_СЮДА_ВАШ_PROJECT_URL';
+        const DB_KEY = 'ВСТАВЬТЕ_СЮДА_ВАШ_ANON_KEY';
 
         document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault();
@@ -159,17 +71,28 @@
             const p = document.getElementById('password').value.trim();
             const error = document.getElementById('errorMsg');
 
-            // Поиск пользователя в нашей базе данных
-            const activeUser = usersDB.find(user => user.username === u && user.password === p);
-
-            if (activeUser) {
-                error.style.display = 'none';
-                sessionStorage.setItem('kristi_logged_in', 'true');
-                sessionStorage.setItem('kristi_user_name', activeUser.name);
-                window.location.href = '../dashboard.html';
-            } else {
+            // Запрос авторизации напрямую к облачной СУБД PostgreSQL
+            fetch(`${DB_URL}/rest/v1/users?username=eq.${u}&password=eq.${p}`, {
+                method: 'GET',
+                headers: {
+                    'apikey': DB_KEY,
+                    'Authorization': 'Bearer ' + DB_KEY
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.length > 0) {
+                    sessionStorage.setItem('kristi_logged_in', 'true');
+                    sessionStorage.setItem('kristi_user_name', data[0].name);
+                    window.location.href = '../dashboard.html';
+                } else {
+                    error.style.display = 'block';
+                }
+            })
+            .catch(() => {
+                error.textContent = 'Ошибка подключения к базе данных.';
                 error.style.display = 'block';
-            }
+            });
         });
     </script>
 </body>
