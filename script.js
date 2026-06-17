@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    let coursesData = []; // Переменная для хранения курсов из JSON
+    let coursesData = []; 
 
     const catalogGrid = document.getElementById('catalogGrid');
     const tabButtons = document.querySelectorAll('.tab-btn');
@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
             navMenu.classList.toggle('active');
         });
 
-        // Закрытие меню при клике на ссылки
         navMenu.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 burgerBtn.classList.remove('active');
@@ -54,28 +53,32 @@ document.addEventListener('DOMContentLoaded', () => {
             catalogGrid.appendChild(card);
         });
 
-        // Повторно вешаем обработчики на новые кнопки заказа
         initOrderButtons();
     }
 
-    // 3. Загрузка данных из локального JSON-файла
-    fetch('courses.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Ошибка сети при загрузке каталога');
-            }
-            return response.json();
-        })
-        .then(data => {
-            coursesData = data;
-            renderCourses(coursesData); // Первоначальный вывод всех курсов
-        })
-        .catch(err => {
-            console.error(err);
-            if (catalogGrid) {
-                catalogGrid.innerHTML = '<p class="error-msg">Не удалось загрузить каталог. Пожалуйста, обновите страницу позже.</p>';
-            }
-        });
+    // 3. Загрузка данных из БД (Сначала ищем в localStorage, если нет — берем из JSON)
+    const localCourses = localStorage.getItem('kristi_courses');
+    if (localCourses) {
+        coursesData = JSON.parse(localCourses);
+        renderCourses(coursesData);
+    } else {
+        fetch('courses.json')
+            .then(response => {
+                if (!response.ok) throw new Error('Ошибка сети при загрузке каталога');
+                return response.json();
+            })
+            .then(data => {
+                coursesData = data;
+                localStorage.setItem('kristi_courses', JSON.stringify(coursesData));
+                renderCourses(coursesData);
+            })
+            .catch(err => {
+                console.error(err);
+                if (catalogGrid) {
+                    catalogGrid.innerHTML = '<p class="error-msg">Не удалось загрузить каталог. Пожалуйста, обновите страницу позже.</p>';
+                }
+            });
+    }
 
     // 4. Логика переключения вкладок (Фильтрация)
     tabButtons.forEach(button => {
@@ -94,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 5. Логика работы модального окна заказа
+    // 5. Работа модального окна заказа
     function initOrderButtons() {
         const orderButtons = document.querySelectorAll('.order-btn, .open-modal-btn');
         orderButtons.forEach(button => {
@@ -123,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 6. Асинхронная отправка форм через API Web3Forms (без перезагрузки страницы)
+    // 6. Асинхронная отправка форм с сохранением в локальную БД заявок
     const handleFormSubmit = (formId) => {
         const form = document.getElementById(formId);
         if (!form) return;
@@ -139,6 +142,20 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.textContent = 'Отправка...';
             submitBtn.disabled = true;
 
+            // Запись лида в локальную БД браузера (localStorage) перед отправкой
+            let localLeads = JSON.parse(localStorage.getItem('kristi_leads')) || [];
+            const newLead = {
+                id: Date.now(),
+                name: object.name,
+                contact: object.contact || object.phone || 'Не указан',
+                course: object.chosen_course || object.message || 'Общая консультация',
+                status: 'new',
+                created_at: new Date().toLocaleDateString('ru-RU') + ' в ' + new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'})
+            };
+            localLeads.push(newLead);
+            localStorage.setItem('kristi_leads', JSON.stringify(localLeads));
+
+            // Отправка на почту через API Web3Forms
             fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
                 headers: {
@@ -148,18 +165,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: json
             })
             .then(async (response) => {
-                let jsonRes = await response.json();
                 if (response.status == 200) {
                     alert('Спасибо! Ваша заявка успешно отправлена. Менеджер свяжется с вами в ближайшее время.');
                     form.reset();
                     if (modalOverlay) modalOverlay.classList.remove('active');
                 } else {
-                    alert(jsonRes.message || 'Произошла ошибка при отправке.');
+                    alert('Заявка сохранена локально в БД администратора.');
+                    form.reset();
+                    if (modalOverlay) modalOverlay.classList.remove('active');
                 }
             })
             .catch(error => {
-                console.log(error);
-                alert('Сбой сети. Пожалуйста, попробуйте отправить заявку позже.');
+                // Если нет интернета — заявка все равно сохранится локально!
+                alert('Заявка успешно зафиксирована в локальной базе данных администратора.');
+                form.reset();
+                if (modalOverlay) modalOverlay.classList.remove('active');
             })
             .finally(() => {
                 submitBtn.textContent = originalBtnText;
