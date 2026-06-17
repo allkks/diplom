@@ -1,6 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
-    let coursesData = []; 
+// НАСТРОЙКА ПОДКЛЮЧЕНИЯ К ОБЛАЧНОЙ БД POSTGRESQL (SUPABASE)
+const DB_URL = 'https://ouynyccvvpzltacddurb.supabase.co';
+const DB_KEY = 'sb_publishable_-3MbSzRabVy0g2_el2YIqw_VTsWQYbw';
 
+document.addEventListener('DOMContentLoaded', () => {
     const catalogGrid = document.getElementById('catalogGrid');
     const tabButtons = document.querySelectorAll('.tab-btn');
     const burgerBtn = document.getElementById('burgerBtn');
@@ -10,13 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedCourseName = document.getElementById('selectedCourseName');
     const courseInput = document.getElementById('courseInput');
 
-    // 1. Мобильное бургер-меню
+    let coursesData = [];
+
+    // Мобильное меню
     if (burgerBtn && navMenu) {
         burgerBtn.addEventListener('click', () => {
             burgerBtn.classList.toggle('active');
             navMenu.classList.toggle('active');
         });
-
         navMenu.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 burgerBtn.classList.remove('active');
@@ -25,21 +28,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 2. Функция рендеринга карточек курсов
     function renderCourses(courses) {
         if (!catalogGrid) return;
         catalogGrid.innerHTML = '';
-
         if (courses.length === 0) {
             catalogGrid.innerHTML = '<p class="no-results">Курсы в данной категории временно отсутствуют.</p>';
             return;
         }
-
         courses.forEach(course => {
             const card = document.createElement('div');
             card.className = 'service-card';
             card.setAttribute('data-category', course.category);
-
             card.innerHTML = `
                 <div class="card-badge">${course.category_name}</div>
                 <h3>${course.name}</h3>
@@ -52,42 +51,36 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             catalogGrid.appendChild(card);
         });
-
         initOrderButtons();
     }
 
-    // 3. Загрузка данных из БД (Сначала ищем в localStorage, если нет — берем из JSON)
-    const localCourses = localStorage.getItem('kristi_courses');
-    if (localCourses) {
-        coursesData = JSON.parse(localCourses);
-        renderCourses(coursesData);
-    } else {
-        fetch('courses.json')
-            .then(response => {
-                if (!response.ok) throw new Error('Ошибка сети при загрузке каталога');
-                return response.json();
-            })
-            .then(data => {
-                coursesData = data;
-                localStorage.setItem('kristi_courses', JSON.stringify(coursesData));
-                renderCourses(coursesData);
-            })
-            .catch(err => {
-                console.error(err);
-                if (catalogGrid) {
-                    catalogGrid.innerHTML = '<p class="error-msg">Не удалось загрузить каталог. Пожалуйста, обновите страницу позже.</p>';
-                }
-            });
+    // Загрузка данных напрямую из облачной базы PostgreSQL
+    function loadCoursesFromCloud() {
+        fetch(`${DB_URL}/rest/v1/courses?select=*&order=id.asc`, {
+            method: 'GET',
+            headers: {
+                'apikey': DB_KEY,
+                'Authorization': 'Bearer ' + DB_KEY
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            coursesData = data;
+            renderCourses(coursesData);
+        })
+        .catch(err => {
+            console.error('Ошибка загрузки из СУБД:', err);
+            catalogGrid.innerHTML = '<p class="error-msg">Ошибка подключения к СУБД.</p>';
+        });
     }
 
-    // 4. Логика переключения вкладок (Фильтрация)
+    loadCoursesFromCloud();
+
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
             tabButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
-
             const filterValue = button.getAttribute('data-filter');
-
             if (filterValue === 'all') {
                 renderCourses(coursesData);
             } else {
@@ -97,14 +90,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 5. Работа модального окна заказа
     function initOrderButtons() {
         const orderButtons = document.querySelectorAll('.order-btn, .open-modal-btn');
         orderButtons.forEach(button => {
             button.onclick = (e) => {
                 e.preventDefault();
                 const courseName = button.getAttribute('data-course') || 'Общая консультация';
-                
                 if (selectedCourseName && courseInput && modalOverlay) {
                     selectedCourseName.textContent = courseName;
                     courseInput.value = courseName;
@@ -115,18 +106,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (modalCloseBtn && modalOverlay) {
-        modalCloseBtn.addEventListener('click', () => {
-            modalOverlay.classList.remove('active');
-        });
-
+        modalCloseBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
         modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
-                modalOverlay.classList.remove('active');
-            }
+            if (e.target === modalOverlay) modalOverlay.classList.remove('active');
         });
     }
 
-    // 6. Асинхронная отправка форм с сохранением в локальную БД заявок
+    // Отправка формы с записью в облачную БД PostgreSQL
     const handleFormSubmit = (formId) => {
         const form = document.getElementById(formId);
         if (!form) return;
@@ -135,15 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const formData = new FormData(form);
             const object = Object.fromEntries(formData);
-            const json = JSON.stringify(object);
 
             const submitBtn = form.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.textContent;
             submitBtn.textContent = 'Отправка...';
             submitBtn.disabled = true;
 
-            // Запись лида в локальную БД браузера (localStorage) перед отправкой
-            let localLeads = JSON.parse(localStorage.getItem('kristi_leads')) || [];
             const newLead = {
                 id: Date.now(),
                 name: object.name,
@@ -152,37 +134,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 status: 'new',
                 created_at: new Date().toLocaleDateString('ru-RU') + ' в ' + new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'})
             };
-            localLeads.push(newLead);
-            localStorage.setItem('kristi_leads', JSON.stringify(localLeads));
 
-            // Отправка на почту через API Web3Forms
-            fetch('https://api.web3forms.com/submit', {
+            // Запись лида напрямую в облачную таблицу "leads"
+            fetch(`${DB_URL}/rest/v1/leads`, {
                 method: 'POST',
                 headers: {
+                    'apikey': DB_KEY,
+                    'Authorization': 'Bearer ' + DB_KEY,
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Prefer': 'return=representation'
                 },
-                body: json
+                body: JSON.stringify(newLead)
             })
-            .then(async (response) => {
-                if (response.status == 200) {
-                    alert('Спасибо! Ваша заявка успешно отправлена. Менеджер свяжется с вами в ближайшее время.');
-                    form.reset();
-                    if (modalOverlay) modalOverlay.classList.remove('active');
-                } else {
-                    alert('Заявка сохранена локально в БД администратора.');
-                    form.reset();
-                    if (modalOverlay) modalOverlay.classList.remove('active');
-                }
-            })
-            .catch(error => {
-                // Если нет интернета — заявка все равно сохранится локально!
-                alert('Заявка успешно зафиксирована в локальной базе данных администратора.');
+            .then(() => {
+                alert('Спасибо! Ваша заявка успешно записана в СУБД PostgreSQL.');
                 form.reset();
                 if (modalOverlay) modalOverlay.classList.remove('active');
             })
+            .catch(err => {
+                console.error(err);
+                alert('Ошибка соединения с базой данных.');
+            })
             .finally(() => {
-                submitBtn.textContent = originalBtnText;
+                submitBtn.textContent = 'Отправить запрос';
                 submitBtn.disabled = false;
             });
         });
