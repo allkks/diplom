@@ -11,7 +11,7 @@
     </script>
     <style>
         :root {
-            --primary: #2d4a22; /* Наш новый хвойный цвет */
+            --primary: #2d4a22;
             --primary-hover: #1c3014;
             --bg: #f2f4f0;
             --text: #192015;
@@ -21,220 +21,50 @@
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            height: 100vh;
+            background-color: var(--bg); color: var(--text); margin: 0; padding: 0; display: flex; height: 100vh;
         }
-        /* Боковая панель */
         .sidebar {
-            width: 260px;
-            background-color: #1c2519;
-            color: #e2e6df;
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
+            width: 260px; background-color: #1c2519; color: #d1d7cd; display: flex; flex-direction: column; flex-shrink: 0;
         }
         .sidebar-header {
-            padding: 24px;
-            background-color: #121910;
-            font-size: 1.1rem;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-            color: #c5a880; /* Золотой акцент */
+            padding: 24px; background-color: #121910; font-size: 1.1rem; font-weight: 800; color: #c5a880;
         }
-        .sidebar-menu {
-            padding: 20px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .menu-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            padding: 10px 24px;
-            color: #7a8275;
-        }
-        .menu-item {
-            padding: 10px 24px;
-            color: #d1d7cd;
-            text-decoration: none;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: 0.2s;
-            cursor: pointer;
-        }
-        .menu-item:hover, .menu-item.active {
-            background-color: var(--primary);
-            color: #fff;
-        }
-        /* Основной контент */
-        .main-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-        .header {
-            background-color: #fff;
-            border-bottom: 1px solid var(--border);
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 40px;
-            flex-shrink: 0;
-        }
-        .header h2 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin: 0;
-        }
-        .user-info {
-            font-size: 0.9rem;
-            color: #5a6255;
-        }
-        .dashboard {
-            padding: 40px;
-            display: grid;
-            grid-template-columns: 2.2fr 1fr;
-            gap: 30px;
-        }
-        .card {
-            background-color: #fff;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            margin-bottom: 25px;
-        }
-        .card-header-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
-        }
-        .card h3 {
-            font-size: 1.1rem;
-            color: var(--primary);
-            margin: 0;
-        }
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .table th {
-            text-align: left;
-            padding: 12px 10px;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            color: #7a8275;
-            border-bottom: 1px solid var(--border);
-        }
-        .table td {
-            padding: 12px 10px;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.95rem;
-        }
-        /* Кнопки и статусы */
-        .btn {
-            padding: 6px 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+        .sidebar-menu { padding: 20px 0; display: flex; flex-direction: column; gap: 5px; }
+        .menu-title { font-size: 0.75rem; text-transform: uppercase; padding: 10px 24px; color: #7a8275; }
+        .menu-item { padding: 10px 24px; color: #d1d7cd; text-decoration: none; font-size: 0.95rem; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .menu-item:hover, .menu-item.active { background-color: var(--primary); color: #fff; }
+        .main-content { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        .header { background-color: #fff; border-bottom: 1px solid var(--border); height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; }
+        .header h2 { font-size: 1.3rem; font-weight: 700; margin: 0; }
+        .user-info { font-size: 0.9rem; color: #5a6255; }
+        .dashboard { padding: 40px; display: grid; grid-template-columns: 2.2fr 1fr; gap: 30px; }
+        .card { background-color: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-bottom: 25px; }
+        .card-header-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th { text-align: left; padding: 12px 10px; font-size: 0.85rem; text-transform: uppercase; color: #7a8275; border-bottom: 1px solid var(--border); }
+        .table td { padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+        .btn { padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 4px; border: none; cursor: pointer; }
         .btn-primary { background-color: var(--primary); color: #fff; }
-        .btn-primary:hover { background-color: var(--primary-hover); }
         .btn-secondary { background-color: #7a8275; color: #fff; }
-        .btn-secondary:hover { background-color: #5a6255; }
         .btn-danger { background-color: #ef4444; color: #fff; }
-        .btn-danger:hover { background-color: #dc2626; }
         .btn-success { background-color: #10b981; color: #fff; }
-        
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
         .status-new { background-color: #fef3c7; color: #d97706; }
         .status-process { background-color: #dbeafe; color: #2563eb; }
         .status-completed { background-color: #d1fae5; color: #059669; }
-
-        /* Логи действий */
-        .timeline {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .timeline-item {
-            font-size: 0.9rem;
-            border-left: 2px solid var(--primary);
-            padding-left: 15px;
-            position: relative;
-        }
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -5px;
-            top: 5px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--primary);
-        }
-        .timeline-date {
-            font-size: 0.75rem;
-            color: #7a8275;
-            margin-top: 3px;
-        }
-
-        /* Форма модального окна добавления курса */
-        .modal {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 200;
-        }
+        .timeline { display: flex; flex-direction: column; gap: 15px; }
+        .timeline-item { font-size: 0.9rem; border-left: 2px solid var(--primary); padding-left: 15px; position: relative; }
+        .timeline-item::before { content: ''; position: absolute; left: -5px; top: 5px; width: 8px; height: 8px; border-radius: 50%; background-color: var(--primary); }
+        .timeline-date { font-size: 0.75rem; color: #7a8275; }
+        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; }
         .modal.active { display: flex; }
-        .modal-body {
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 500px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .form-group input, .form-group select, .form-group textarea {
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            font-size: 0.95rem;
-        }
+        .modal-body { background: #fff; padding: 30px; border-radius: 8px; width: 100%; max-width: 500px; }
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
+        .form-group input, .form-group select, .form-group textarea { padding: 10px; border: 1px solid var(--border); border-radius: 4px; }
     </style>
 </head>
 <body>
 
-    <!-- Меню админки -->
     <div class="sidebar">
         <div class="sidebar-header">КРИСТИ ЛМС</div>
         <div class="sidebar-menu">
@@ -246,7 +76,6 @@
         </div>
     </div>
 
-    <!-- Контент -->
     <div class="main-content">
         <div class="header">
             <h2 id="pageTitle">Управление образовательными программами</h2>
@@ -255,8 +84,6 @@
 
         <div class="dashboard">
             <div id="leftColumn">
-                
-                <!-- БЛОК УПРАВЛЕНИЯ КУРСАМИ -->
                 <div class="card" id="coursesBlock">
                     <div class="card-header-flex">
                         <h3>Активные курсы каталога</h3>
@@ -276,10 +103,9 @@
                     </table>
                 </div>
 
-                <!-- БЛОК УПРАВЛЕНИЯ ЗАЯВКАМИ -->
                 <div class="card" id="leadsBlock" style="display: none;">
                     <div class="card-header-flex">
-                        <h3>Поступившие заявки клиентов (Лиды)</h3>
+                        <h3>Поступившие заявки (Лиды)</h3>
                         <button class="btn btn-danger" id="clearLeadsBtn">Очистить историю</button>
                     </div>
                     <table class="table">
@@ -290,23 +116,21 @@
                                 <th>Телефон / Контакт</th>
                                 <th>Выбранный курс / Тема</th>
                                 <th>Статус</th>
-                                <th style="text-align: right;">Действия</th>
+                                <th style="text-align: right; width: 200px;">Действия</th>
                             </tr>
                         </thead>
                         <tbody id="adminLeadsTable"></tbody>
                     </table>
                 </div>
-
             </div>
 
-            <!-- Правая колонка -->
             <div>
                 <div class="card">
-                    <h3>История изменений в СУБД</h3>
+                    <h3>История изменений СУБД</h3>
                     <div class="timeline" id="adminLogTimeline">
                         <div class="timeline-item">
-                            <div>База данных СУБД PostgreSQL инициализирована</div>
-                            <div class="timeline-date">Системная запись</div>
+                            <div>База данных PostgreSQL подключена</div>
+                            <div class="timeline-date">Система</div>
                         </div>
                     </div>
                 </div>
@@ -314,12 +138,11 @@
         </div>
     </div>
 
-    <!-- Модальное окно добавления / редактирования -->
     <div class="modal" id="addCourseModal">
         <div class="modal-body">
-            <h3 id="modalTitle" style="margin-bottom: 20px;">Новая запись образовательной программы</h3>
+            <h3 id="modalTitle">Новая запись образовательной программы</h3>
             <form id="addCourseForm">
-                <input type="hidden" id="editIndex" value="">
+                <input type="hidden" id="editId" value="">
                 <div class="form-group">
                     <label>Направление обучения (Категория)</label>
                     <select id="courseCategory" required>
@@ -330,29 +153,32 @@
                 </div>
                 <div class="form-group">
                     <label>Название курса</label>
-                    <input type="text" id="courseName" required placeholder="Например: Эстетическая косметология">
+                    <input type="text" id="courseName" required>
                 </div>
                 <div class="form-group">
                     <label>Краткое описание курса</label>
-                    <textarea id="courseDesc" rows="3" required placeholder="Введите аннотацию программы..."></textarea>
+                    <textarea id="courseDesc" rows="3" required></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Объем обучения (академические часы)</label>
-                    <input type="number" id="courseHours" required placeholder="250">
+                    <label>Объем обучения (часы)</label>
+                    <input type="number" id="courseHours" required>
                 </div>
                 <div class="form-group">
-                    <label>Стоимость обучения (в рублях)</label>
-                    <input type="text" id="coursePrice" required placeholder="32 000">
+                    <label>Стоимость обучения</label>
+                    <input type="text" id="coursePrice" required>
                 </div>
                 <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
                     <button type="button" class="btn btn-secondary" id="closeModalBtn">Отмена</button>
-                    <button type="submit" class="btn btn-primary" id="saveCourseBtn">Сохранить запись</button>
+                    <button type="submit" class="btn btn-primary" id="saveCourseBtn">Сохранить</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
+        const DB_URL = 'ВСТАВЬТЕ_СЮДА_ВАШ_PROJECT_URL';
+        const DB_KEY = 'ВСТАВЬТЕ_СЮДА_ВАШ_ANON_KEY';
+
         document.addEventListener('DOMContentLoaded', () => {
             const menuCoursesBtn = document.getElementById('menuCoursesBtn');
             const menuLeadsBtn = document.getElementById('menuLeadsBtn');
@@ -370,19 +196,15 @@
             const logoutBtn = document.getElementById('logoutBtn');
             const modalTitle = document.getElementById('modalTitle');
             const saveCourseBtn = document.getElementById('saveCourseBtn');
-            const editIndexInput = document.getElementById('editIndex');
+            const editIdInput = document.getElementById('editId');
             const adminUserName = document.getElementById('adminUserName');
 
             let courses = [];
             let leads = [];
 
-            // Отображаем имя администратора из сессии
             const sessionName = sessionStorage.getItem('kristi_user_name');
-            if (sessionName) {
-                adminUserName.textContent = sessionName;
-            }
+            if (sessionName) adminUserName.textContent = sessionName;
 
-            // Выход из системы
             logoutBtn.onclick = () => {
                 sessionStorage.removeItem('kristi_logged_in');
                 sessionStorage.removeItem('kristi_user_name');
@@ -392,10 +214,7 @@
             function addLog(text) {
                 const item = document.createElement('div');
                 item.className = 'timeline-item';
-                item.innerHTML = `
-                    <div>${text}</div>
-                    <div class="timeline-date">Сегодня в ${new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'})}</div>
-                `;
+                item.innerHTML = `<div>${text}</div><div class="timeline-date">Сегодня в ${new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'})}</div>`;
                 adminLogTimeline.insertBefore(item, adminLogTimeline.firstChild);
             }
 
@@ -405,6 +224,7 @@
                 coursesBlock.style.display = 'block';
                 leadsBlock.style.display = 'none';
                 pageTitle.textContent = "Управление образовательными программами";
+                loadCourses();
             });
 
             menuLeadsBtn.addEventListener('click', () => {
@@ -413,71 +233,94 @@
                 leadsBlock.style.display = 'block';
                 coursesBlock.style.display = 'none';
                 pageTitle.textContent = "Реестр входящих обращений (Лиды)";
-                renderLeadsList();
+                loadLeads();
             });
 
-            function renderCoursesList() {
-                courses = JSON.parse(localStorage.getItem('kristi_courses')) || [];
+            // Загрузка курсов из СУБД PostgreSQL
+            function loadCourses() {
+                fetch(`${DB_URL}/rest/v1/courses?select=*&order=id.asc`, {
+                    headers: { 'apikey': DB_KEY, 'Authorization': 'Bearer ' + DB_KEY }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    courses = data;
+                    renderCoursesTable();
+                });
+            }
+
+            function renderCoursesTable() {
                 adminCoursesTable.innerHTML = '';
-                courses.forEach((course, index) => {
+                courses.forEach(course => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td><strong>${course.category_name}</strong></td>
                         <td>${course.name}</td>
                         <td>⏱ ${course.hours} ч.</td>
                         <td><span style="color: var(--primary); font-weight:700;">${course.price} ₽</span></td>
-                        <td style="text-align: right; display: flex; gap: 5px; justify-content: flex-end;">
-                            <button class="btn btn-secondary edit-course-btn" data-index="${index}">Изменить</button>
-                            <button class="btn btn-danger delete-course-btn" data-index="${index}">Удалить</button>
+                        <td style="text-align: right;">
+                            <button class="btn btn-secondary edit-btn" data-id="${course.id}">Изменить</button>
+                            <button class="btn btn-danger delete-btn" data-id="${course.id}">Удалить</button>
                         </td>
                     `;
                     adminCoursesTable.appendChild(tr);
                 });
 
-                // Обработчики редактирования курса
-                document.querySelectorAll('.edit-course-btn').forEach(btn => {
+                // Изменить курс
+                document.querySelectorAll('.edit-btn').forEach(btn => {
                     btn.onclick = () => {
-                        const idx = btn.getAttribute('data-index');
-                        const course = courses[idx];
-                        
-                        // Заполняем форму данными курса
+                        const id = btn.getAttribute('data-id');
+                        const course = courses.find(c => c.id == id);
                         document.getElementById('courseCategory').value = course.category;
                         document.getElementById('courseName').value = course.name;
                         document.getElementById('courseDesc').value = course.description;
                         document.getElementById('courseHours').value = course.hours;
                         document.getElementById('coursePrice').value = course.price;
-                        editIndexInput.value = idx;
+                        editIdInput.value = id;
 
-                        modalTitle.textContent = "Редактирование образовательной программы";
+                        modalTitle.textContent = "Редактирование курса";
                         saveCourseBtn.textContent = "Сохранить изменения";
                         addCourseModal.classList.add('active');
                     };
                 });
 
-                // Обработчики удаления курса
-                document.querySelectorAll('.delete-course-btn').forEach(btn => {
+                // Удалить курс из PostgreSQL
+                document.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.onclick = () => {
-                        const idx = btn.getAttribute('data-index');
-                        const courseName = courses[idx].name;
-                        courses.splice(idx, 1);
-                        localStorage.setItem('kristi_courses', JSON.stringify(courses));
-                        addLog(`Удален курс «${courseName}» из СУБД`);
-                        renderCoursesList();
+                        const id = btn.getAttribute('data-id');
+                        const course = courses.find(c => c.id == id);
+                        if (confirm(`Удалить курс «${course.name}»?`)) {
+                            fetch(`${DB_URL}/rest/v1/courses?id=eq.${id}`, {
+                                method: 'DELETE',
+                                headers: { 'apikey': DB_KEY, 'Authorization': 'Bearer ' + DB_KEY }
+                            })
+                            .then(() => {
+                                addLog(`Удален курс «${course.name}»`);
+                                loadCourses();
+                            });
+                        }
                     };
                 });
             }
 
-            function renderLeadsList() {
-                leads = JSON.parse(localStorage.getItem('kristi_leads')) || [];
-                adminLeadsTable.innerHTML = '';
+            // Загрузка лидов из PostgreSQL
+            function loadLeads() {
+                fetch(`${DB_URL}/rest/v1/leads?select=*&order=id.desc`, {
+                    headers: { 'apikey': DB_KEY, 'Authorization': 'Bearer ' + DB_KEY }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    leads = data;
+                    renderLeadsTable();
+                });
+            }
 
+            function renderLeadsTable() {
+                adminLeadsTable.innerHTML = '';
                 if (leads.length === 0) {
-                    adminLeadsTable.innerHTML = '<tr><td colspan="6" style="text-align:center; color: #7a8275;">Новых заявок пока нет.</td></tr>';
+                    adminLeadsTable.innerHTML = '<tr><td colspan="6" style="text-align:center;">Заявок нет.</td></tr>';
                     return;
                 }
-
-                leads.slice().reverse().forEach((lead, index) => {
-                    const actualIndex = leads.length - 1 - index;
+                leads.forEach(lead => {
                     let statusClass = 'status-new';
                     let statusText = 'Новая';
                     if (lead.status === 'process') { statusClass = 'status-process'; statusText = 'В работе'; }
@@ -490,50 +333,65 @@
                         <td>${lead.contact}</td>
                         <td>${lead.course}</td>
                         <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                        <td style="text-align: right; display:flex; gap: 5px; justify-content: flex-end;">
-                            ${lead.status === 'new' ? `<button class="btn btn-primary status-btn" data-idx="${actualIndex}" data-status="process">В работу</button>` : ''}
-                            ${lead.status === 'process' ? `<button class="btn btn-success status-btn" data-idx="${actualIndex}" data-status="completed">Завершить</button>` : ''}
-                            <button class="btn btn-danger delete-lead-btn" data-idx="${actualIndex}">Удалить</button>
+                        <td style="text-align: right;">
+                            ${lead.status === 'new' ? `<button class="btn btn-primary change-status-btn" data-id="${lead.id}" data-status="process">В работу</button>` : ''}
+                            ${lead.status === 'process' ? `<button class="btn btn-success change-status-btn" data-id="${lead.id}" data-status="completed">Завершить</button>` : ''}
+                            <button class="btn btn-danger delete-lead-btn" data-id="${lead.id}">Удалить</button>
                         </td>
                     `;
                     adminLeadsTable.appendChild(tr);
                 });
 
-                document.querySelectorAll('.status-btn').forEach(btn => {
+                // Изменение статуса лида в PostgreSQL
+                document.querySelectorAll('.change-status-btn').forEach(btn => {
                     btn.onclick = () => {
-                        const idx = btn.getAttribute('data-idx');
+                        const id = btn.getAttribute('data-id');
                         const status = btn.getAttribute('data-status');
-                        leads[idx].status = status;
-                        localStorage.setItem('kristi_leads', JSON.stringify(leads));
-                        addLog(`Изменен статус заявки клиента «${leads[idx].name}»`);
-                        renderLeadsList();
+                        fetch(`${DB_URL}/rest/v1/leads?id=eq.${id}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'apikey': DB_KEY,
+                                'Authorization': 'Bearer ' + DB_KEY,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ status })
+                        })
+                        .then(() => {
+                            addLog(`Обновлен статус заявки #${id}`);
+                            loadLeads();
+                        });
                     };
                 });
 
+                // Удаление лида из PostgreSQL
                 document.querySelectorAll('.delete-lead-btn').forEach(btn => {
                     btn.onclick = () => {
-                        const idx = btn.getAttribute('data-idx');
-                        const clientName = leads[idx].name;
-                        leads.splice(idx, 1);
-                        localStorage.setItem('kristi_leads', JSON.stringify(leads));
-                        addLog(`Удалена заявка клиента «${clientName}»`);
-                        renderLeadsList();
+                        const id = btn.getAttribute('data-id');
+                        if (confirm(`Удалить заявку #${id}?`)) {
+                            fetch(`${DB_URL}/rest/v1/leads?id=eq.${id}`, {
+                                method: 'DELETE',
+                                headers: { 'apikey': DB_KEY, 'Authorization': 'Bearer ' + DB_KEY }
+                            })
+                            .then(() => {
+                                addLog(`Удалена заявка #${id}`);
+                                loadLeads();
+                            });
+                        }
                     };
                 });
             }
 
-            // Открытие модального окна добавления курса
-            addCourseBtn.addEventListener('click', () => { 
+            addCourseBtn.addEventListener('click', () => {
                 addCourseForm.reset();
-                editIndexInput.value = "";
+                editIdInput.value = "";
                 modalTitle.textContent = "Новая запись образовательной программы";
                 saveCourseBtn.textContent = "Сохранить запись";
-                addCourseModal.classList.add('active'); 
+                addCourseModal.classList.add('active');
             });
-            
+
             closeModalBtn.addEventListener('click', () => { addCourseModal.classList.remove('active'); });
 
-            // Отправка формы (Добавление или Изменение)
+            // Сохранение изменений или добавление курса в PostgreSQL
             addCourseForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const categorySelect = document.getElementById('courseCategory');
@@ -541,52 +399,63 @@
                 const category_name = categorySelect.options[categorySelect.selectedIndex].text;
                 const name = document.getElementById('courseName').value;
                 const description = document.getElementById('courseDesc').value;
-                const hours = document.getElementById('courseHours').value;
+                const hours = parseInt(document.getElementById('courseHours').value);
                 const price = document.getElementById('coursePrice').value;
-                const editIdx = editIndexInput.value;
+                const editId = editIdInput.value;
 
-                if (editIdx !== "") {
-                    // Режим редактирования
-                    courses[editIdx] = {
-                        id: courses[editIdx].id,
-                        category,
-                        category_name,
-                        name,
-                        description,
-                        hours,
-                        price
-                    };
-                    addLog(`В СУБД обновлены данные курса «${name}»`);
+                if (editId !== "") {
+                    // Метод PATCH (UPDATE)
+                    fetch(`${DB_URL}/rest/v1/courses?id=eq.${editId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'apikey': DB_KEY,
+                            'Authorization': 'Bearer ' + DB_KEY,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ category, category_name, name, description, hours, price })
+                    })
+                    .then(() => {
+                        addLog(`Обновлен курс «${name}»`);
+                        addCourseModal.classList.remove('active');
+                        loadCourses();
+                    });
                 } else {
-                    // Режим добавления нового
+                    // Метод POST (INSERT)
                     const newCourse = {
                         id: Date.now(),
-                        category,
-                        category_name,
-                        name,
-                        description,
-                        hours,
-                        price
+                        category, category_name, name, description, hours, price
                     };
-                    courses.push(newCourse);
-                    addLog(`В СУБД добавлен новый курс «${name}»`);
+                    fetch(`${DB_URL}/rest/v1/courses`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': DB_KEY,
+                            'Authorization': 'Bearer ' + DB_KEY,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(newCourse)
+                    })
+                    .then(() => {
+                        addLog(`Добавлен курс «${name}»`);
+                        addCourseModal.classList.remove('active');
+                        loadCourses();
+                    });
                 }
-
-                localStorage.setItem('kristi_courses', JSON.stringify(courses));
-                addCourseForm.reset();
-                addCourseModal.classList.remove('active');
-                renderCoursesList();
             });
 
             clearLeadsBtn.addEventListener('click', () => {
-                if (confirm('Вы действительно хотите полностью очистить всю историю входящих заявок?')) {
-                    localStorage.removeItem('kristi_leads');
-                    addLog('База поступивших заявок полностью очищена администратором');
-                    renderLeadsList();
+                if (confirm('Очистить всю историю входящих заявок из СУБД PostgreSQL?')) {
+                    fetch(`${DB_URL}/rest/v1/leads`, {
+                        method: 'DELETE',
+                        headers: { 'apikey': DB_KEY, 'Authorization': 'Bearer ' + DB_KEY }
+                    })
+                    .then(() => {
+                        addLog('База лидов очищена');
+                        loadLeads();
+                    });
                 }
             });
 
-            renderCoursesList();
+            loadCourses();
         });
     </script>
 </body>
