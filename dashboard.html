@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Панель управления АИС «Каталог Кристи» — Администрация Django</title>
-    <!-- Защита страницы: если сессии нет — перекидываем на форму входа -->
     <script>
         if (sessionStorage.getItem('kristi_logged_in') !== 'true') {
             window.location.href = 'admin/index.html';
@@ -156,6 +155,8 @@
         }
         .btn-primary { background-color: var(--primary); color: #fff; }
         .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: #7a8275; color: #fff; }
+        .btn-secondary:hover { background-color: #5a6255; }
         .btn-danger { background-color: #ef4444; color: #fff; }
         .btn-danger:hover { background-color: #dc2626; }
         .btn-success { background-color: #10b981; color: #fff; }
@@ -249,7 +250,7 @@
     <div class="main-content">
         <div class="header">
             <h2 id="pageTitle">Управление образовательными программами</h2>
-            <div class="user-info">Вы вошли как: <strong>admin@kristi.ru</strong></div>
+            <div class="user-info">Администратор: <strong id="adminUserName">Иван Козлов</strong></div>
         </div>
 
         <div class="dashboard">
@@ -268,7 +269,7 @@
                                 <th>Название курса</th>
                                 <th>Длительность</th>
                                 <th>Стоимость</th>
-                                <th style="text-align: right;">Действия</th>
+                                <th style="text-align: right; width: 200px;">Действия</th>
                             </tr>
                         </thead>
                         <tbody id="adminCoursesTable"></tbody>
@@ -313,11 +314,12 @@
         </div>
     </div>
 
-    <!-- Модальное окно добавления -->
+    <!-- Модальное окно добавления / редактирования -->
     <div class="modal" id="addCourseModal">
         <div class="modal-body">
-            <h3 style="margin-bottom: 20px;">Новая запись образовательной программы</h3>
+            <h3 id="modalTitle" style="margin-bottom: 20px;">Новая запись образовательной программы</h3>
             <form id="addCourseForm">
+                <input type="hidden" id="editIndex" value="">
                 <div class="form-group">
                     <label>Направление обучения (Категория)</label>
                     <select id="courseCategory" required>
@@ -344,7 +346,7 @@
                 </div>
                 <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
                     <button type="button" class="btn btn-secondary" id="closeModalBtn">Отмена</button>
-                    <button type="submit" class="btn btn-primary">Сохранить запись</button>
+                    <button type="submit" class="btn btn-primary" id="saveCourseBtn">Сохранить запись</button>
                 </div>
             </form>
         </div>
@@ -366,13 +368,24 @@
             const adminLogTimeline = document.getElementById('adminLogTimeline');
             const clearLeadsBtn = document.getElementById('clearLeadsBtn');
             const logoutBtn = document.getElementById('logoutBtn');
+            const modalTitle = document.getElementById('modalTitle');
+            const saveCourseBtn = document.getElementById('saveCourseBtn');
+            const editIndexInput = document.getElementById('editIndex');
+            const adminUserName = document.getElementById('adminUserName');
 
             let courses = [];
             let leads = [];
 
+            // Отображаем имя администратора из сессии
+            const sessionName = sessionStorage.getItem('kristi_user_name');
+            if (sessionName) {
+                adminUserName.textContent = sessionName;
+            }
+
             // Выход из системы
             logoutBtn.onclick = () => {
                 sessionStorage.removeItem('kristi_logged_in');
+                sessionStorage.removeItem('kristi_user_name');
                 window.location.href = 'admin/index.html';
             };
 
@@ -413,13 +426,35 @@
                         <td>${course.name}</td>
                         <td>⏱ ${course.hours} ч.</td>
                         <td><span style="color: var(--primary); font-weight:700;">${course.price} ₽</span></td>
-                        <td style="text-align: right;">
+                        <td style="text-align: right; display: flex; gap: 5px; justify-content: flex-end;">
+                            <button class="btn btn-secondary edit-course-btn" data-index="${index}">Изменить</button>
                             <button class="btn btn-danger delete-course-btn" data-index="${index}">Удалить</button>
                         </td>
                     `;
                     adminCoursesTable.appendChild(tr);
                 });
 
+                // Обработчики редактирования курса
+                document.querySelectorAll('.edit-course-btn').forEach(btn => {
+                    btn.onclick = () => {
+                        const idx = btn.getAttribute('data-index');
+                        const course = courses[idx];
+                        
+                        // Заполняем форму данными курса
+                        document.getElementById('courseCategory').value = course.category;
+                        document.getElementById('courseName').value = course.name;
+                        document.getElementById('courseDesc').value = course.description;
+                        document.getElementById('courseHours').value = course.hours;
+                        document.getElementById('coursePrice').value = course.price;
+                        editIndexInput.value = idx;
+
+                        modalTitle.textContent = "Редактирование образовательной программы";
+                        saveCourseBtn.textContent = "Сохранить изменения";
+                        addCourseModal.classList.add('active');
+                    };
+                });
+
+                // Обработчики удаления курса
                 document.querySelectorAll('.delete-course-btn').forEach(btn => {
                     btn.onclick = () => {
                         const idx = btn.getAttribute('data-index');
@@ -487,9 +522,18 @@
                 });
             }
 
-            addCourseBtn.addEventListener('click', () => { addCourseModal.classList.add('active'); });
+            // Открытие модального окна добавления курса
+            addCourseBtn.addEventListener('click', () => { 
+                addCourseForm.reset();
+                editIndexInput.value = "";
+                modalTitle.textContent = "Новая запись образовательной программы";
+                saveCourseBtn.textContent = "Сохранить запись";
+                addCourseModal.classList.add('active'); 
+            });
+            
             closeModalBtn.addEventListener('click', () => { addCourseModal.classList.remove('active'); });
 
+            // Отправка формы (Добавление или Изменение)
             addCourseForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const categorySelect = document.getElementById('courseCategory');
@@ -499,20 +543,36 @@
                 const description = document.getElementById('courseDesc').value;
                 const hours = document.getElementById('courseHours').value;
                 const price = document.getElementById('coursePrice').value;
+                const editIdx = editIndexInput.value;
 
-                const newCourse = {
-                    id: Date.now(),
-                    category,
-                    category_name,
-                    name,
-                    description,
-                    hours,
-                    price
-                };
+                if (editIdx !== "") {
+                    // Режим редактирования
+                    courses[editIdx] = {
+                        id: courses[editIdx].id,
+                        category,
+                        category_name,
+                        name,
+                        description,
+                        hours,
+                        price
+                    };
+                    addLog(`В СУБД обновлены данные курса «${name}»`);
+                } else {
+                    // Режим добавления нового
+                    const newCourse = {
+                        id: Date.now(),
+                        category,
+                        category_name,
+                        name,
+                        description,
+                        hours,
+                        price
+                    };
+                    courses.push(newCourse);
+                    addLog(`В СУБД добавлен новый курс «${name}»`);
+                }
 
-                courses.push(newCourse);
                 localStorage.setItem('kristi_courses', JSON.stringify(courses));
-                addLog(`В СУБД добавлен новый курс «${name}»`);
                 addCourseForm.reset();
                 addCourseModal.classList.remove('active');
                 renderCoursesList();
