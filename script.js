@@ -54,7 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
         initOrderButtons();
     }
 
-    // Загрузка данных напрямую из облачной базы PostgreSQL
+    // ПАТТЕРН ОПТИМИЗАЦИИ SWR: 
+    // 1. Сначала мгновенно рендерим каталог из локальной копии (0.01 сек)
+    const localCourses = localStorage.getItem('kristi_courses');
+    if (localCourses) {
+        coursesData = JSON.parse(localCourses);
+        renderCourses(coursesData);
+    }
+
+    // 2. В фоне тихо отправляем запрос к облачной БД PostgreSQL для проверки обновлений
     function loadCoursesFromCloud() {
         fetch(`${DB_URL}/rest/v1/courses?select=*&order=id.asc`, {
             method: 'GET',
@@ -65,12 +73,18 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(res => res.json())
         .then(data => {
-            coursesData = data;
-            renderCourses(coursesData);
+            // Если данные в облаке изменились по сравнению с локальной копией — перерисовываем сайт
+            if (JSON.stringify(data) !== JSON.stringify(coursesData)) {
+                coursesData = data;
+                localStorage.setItem('kristi_courses', JSON.stringify(coursesData));
+                renderCourses(coursesData);
+            }
         })
         .catch(err => {
-            console.error('Ошибка загрузки из СУБД:', err);
-            catalogGrid.innerHTML = '<p class="error-msg">Ошибка подключения к СУБД.</p>';
+            console.warn('Фоновое соединение с облаком временно недоступно:', err);
+            if (coursesData.length === 0) {
+                catalogGrid.innerHTML = '<p class="error-msg">Ошибка подключения к СУБД.</p>';
+            }
         });
     }
 
