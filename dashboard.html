@@ -199,8 +199,8 @@
             const editIdInput = document.getElementById('editId');
             const adminUserName = document.getElementById('adminUserName');
 
-            let courses = [];
-            let leads = [];
+            let courses = JSON.parse(localStorage.getItem('kristi_courses')) || [];
+            let leads = JSON.parse(localStorage.getItem('kristi_leads')) || [];
 
             const sessionName = sessionStorage.getItem('kristi_user_name');
             if (sessionName) adminUserName.textContent = sessionName;
@@ -224,7 +224,7 @@
                 coursesBlock.style.display = 'block';
                 leadsBlock.style.display = 'none';
                 pageTitle.textContent = "Управление образовательными программами";
-                loadCourses();
+                renderCoursesTable();
             });
 
             menuLeadsBtn.addEventListener('click', () => {
@@ -233,21 +233,10 @@
                 leadsBlock.style.display = 'block';
                 coursesBlock.style.display = 'none';
                 pageTitle.textContent = "Реестр входящих обращений (Лиды)";
-                loadLeads();
+                renderLeadsTable();
             });
 
-            // Загрузка курсов из СУБД PostgreSQL
-            function loadCourses() {
-                fetch(`${DB_URL}/rest/v1/courses?select=*&order=id.asc`, {
-                    headers: { 'apikey': DB_KEY, 'Authorization': 'Bearer ' + DB_KEY }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    courses = data;
-                    renderCoursesTable();
-                });
-            }
-
+            // МГНОВЕННЫЙ РЕНДЕР КУРСОВ (0 мс задержки)
             function renderCoursesTable() {
                 adminCoursesTable.innerHTML = '';
                 courses.forEach(course => {
@@ -283,37 +272,31 @@
                     };
                 });
 
-                // Удалить курс из PostgreSQL
+                // МГНОВЕННОЕ УДАЛЕНИЕ КУРСА НА ЭКРАНЕ + ФОНОВАЯ ОТПРАВКА В БД
                 document.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.onclick = () => {
                         const id = btn.getAttribute('data-id');
-                        const course = courses.find(c => c.id == id);
-                        if (confirm(`Удалить курс «${course.name}»?`)) {
+                        const idx = courses.findIndex(c => c.id == id);
+                        const courseName = courses[idx].name;
+                        
+                        if (confirm(`Удалить курс «${courseName}»?`)) {
+                            // 1. Моментально обновляем UI и кэш
+                            courses.splice(idx, 1);
+                            localStorage.setItem('kristi_courses', JSON.stringify(courses));
+                            addLog(`Удален курс «${courseName}»`);
+                            renderCoursesTable();
+
+                            // 2. Тихо в фоне отправляем запрос на удаление в облачную PostgreSQL
                             fetch(`${DB_URL}/rest/v1/courses?id=eq.${id}`, {
                                 method: 'DELETE',
                                 headers: { 'apikey': DB_KEY, 'Authorization': 'Bearer ' + DB_KEY }
-                            })
-                            .then(() => {
-                                addLog(`Удален курс «${course.name}»`);
-                                loadCourses();
                             });
                         }
                     };
                 });
             }
 
-            // Загрузка лидов из PostgreSQL
-            function loadLeads() {
-                fetch(`${DB_URL}/rest/v1/leads?select=*&order=id.desc`, {
-                    headers: { 'apikey': DB_KEY, 'Authorization': 'Bearer ' + DB_KEY }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    leads = data;
-                    renderLeadsTable();
-                });
-            }
-
+            // МГНОВЕННЫЙ РЕНДЕР ЛИДОВ (0 мс задержки)
             function renderLeadsTable() {
                 adminLeadsTable.innerHTML = '';
                 if (leads.length === 0) {
@@ -342,11 +325,20 @@
                     adminLeadsTable.appendChild(tr);
                 });
 
-                // Изменение статуса лида в PostgreSQL
+                // МГНОВЕННОЕ ИЗМЕНЕНИЕ СТАТУСА НА ЭКРАНЕ + ФОНОВОЙ ЗАПРОС В БД
                 document.querySelectorAll('.change-status-btn').forEach(btn => {
                     btn.onclick = () => {
                         const id = btn.getAttribute('data-id');
                         const status = btn.getAttribute('data-status');
+                        const idx = leads.findIndex(l => l.id == id);
+                        
+                        // 1. Моментально перерисовываем
+                        leads[idx].status = status;
+                        localStorage.setItem('kristi_leads', JSON.stringify(leads));
+                        addLog(`Обновлен статус заявки #${id}`);
+                        renderLeadsTable();
+
+                        // 2. Тихо в фоне шлем в PostgreSQL
                         fetch(`${DB_URL}/rest/v1/leads?id=eq.${id}`, {
                             method: 'PATCH',
                             headers: {
@@ -355,26 +347,27 @@
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({ status })
-                        })
-                        .then(() => {
-                            addLog(`Обновлен статус заявки #${id}`);
-                            loadLeads();
                         });
                     };
                 });
 
-                // Удаление лида из PostgreSQL
+                // МГНОВЕННОЕ УДАЛЕНИЕ ЛИДА НА ЭКРАНЕ + ФОНОВОЙ ЗАПРОС В БД
                 document.querySelectorAll('.delete-lead-btn').forEach(btn => {
                     btn.onclick = () => {
                         const id = btn.getAttribute('data-id');
+                        const idx = leads.findIndex(l => l.id == id);
+                        
                         if (confirm(`Удалить заявку #${id}?`)) {
+                            // 1. Моментально обновляем UI
+                            leads.splice(idx, 1);
+                            localStorage.setItem('kristi_leads', JSON.stringify(leads));
+                            addLog(`Удалена заявка #${id}`);
+                            renderLeadsTable();
+
+                            // 2. В фоне удаляем в PostgreSQL
                             fetch(`${DB_URL}/rest/v1/leads?id=eq.${id}`, {
                                 method: 'DELETE',
                                 headers: { 'apikey': DB_KEY, 'Authorization': 'Bearer ' + DB_KEY }
-                            })
-                            .then(() => {
-                                addLog(`Удалена заявка #${id}`);
-                                loadLeads();
                             });
                         }
                     };
@@ -391,7 +384,7 @@
 
             closeModalBtn.addEventListener('click', () => { addCourseModal.classList.remove('active'); });
 
-            // Сохранение изменений или добавление курса в PostgreSQL
+            // МГНОВЕННОЕ ДОБАВЛЕНИЕ/ИЗМЕНЕНИЕ КУРСА НА ЭКРАНЕ + ФОНОВАЯ ЗАПИСЬ В БД
             addCourseForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const categorySelect = document.getElementById('courseCategory');
@@ -404,58 +397,88 @@
                 const editId = editIdInput.value;
 
                 if (editId !== "") {
-                    // Метод PATCH (UPDATE)
+                    // РЕЖИМ ИЗМЕНЕНИЯ КУРСА
+                    const idx = courses.findIndex(c => c.id == editId);
+                    courses[idx] = { id: editId, category, category_name, name, description, hours, price };
+                    localStorage.setItem('kristi_courses', JSON.stringify(courses));
+                    addLog(`Обновлен курс «${name}»`);
+                    renderCoursesTable();
+                    addCourseModal.classList.remove('active');
+
+                    // Тихо шлем в PostgreSQL в фоне
                     fetch(`${DB_URL}/rest/v1/courses?id=eq.${editId}`, {
                         method: 'PATCH',
                         headers: {
-                            'apikey': DB_KEY,
-                            'Authorization': 'Bearer ' + DB_KEY,
+                            'apikey': DB_KEY, 'Authorization': 'Bearer ' + DB_KEY,
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({ category, category_name, name, description, hours, price })
-                    })
-                    .then(() => {
-                        addLog(`Обновлен курс «${name}»`);
-                        addCourseModal.classList.remove('active');
-                        loadCourses();
                     });
                 } else {
-                    // Метод POST (INSERT)
-                    const newCourse = {
-                        id: Date.now(),
-                        category, category_name, name, description, hours, price
-                    };
+                    // РЕЖИМ ДОБАВЛЕНИЯ КУРСА
+                    const newId = Date.now();
+                    const newCourse = { id: newId, category, category_name, name, description, hours, price };
+                    courses.push(newCourse);
+                    localStorage.setItem('kristi_courses', JSON.stringify(courses));
+                    addLog(`Добавлен курс «${name}»`);
+                    renderCoursesTable();
+                    addCourseModal.classList.remove('active');
+
+                    // Тихо шлем в PostgreSQL в фоне
                     fetch(`${DB_URL}/rest/v1/courses`, {
                         method: 'POST',
                         headers: {
-                            'apikey': DB_KEY,
-                            'Authorization': 'Bearer ' + DB_KEY,
+                            'apikey': DB_KEY, 'Authorization': 'Bearer ' + DB_KEY,
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify(newCourse)
-                    })
-                    .then(() => {
-                        addLog(`Добавлен курс «${name}»`);
-                        addCourseModal.classList.remove('active');
-                        loadCourses();
                     });
                 }
             });
 
+            // Очистка истории лидов
             clearLeadsBtn.addEventListener('click', () => {
                 if (confirm('Очистить всю историю входящих заявок из СУБД PostgreSQL?')) {
+                    leads = [];
+                    localStorage.removeItem('kristi_leads');
+                    addLog('База лидов очищена');
+                    renderLeadsTable();
+
                     fetch(`${DB_URL}/rest/v1/leads`, {
                         method: 'DELETE',
                         headers: { 'apikey': DB_KEY, 'Authorization': 'Bearer ' + DB_KEY }
-                    })
-                    .then(() => {
-                        addLog('База лидов очищена');
-                        loadLeads();
                     });
                 }
             });
 
-            loadCourses();
+            // Загрузка актуальных данных из облака PostgreSQL в фоне (чтобы синхронизировать сессию)
+            function syncWithCloudDB() {
+                fetch(`${DB_URL}/rest/v1/courses?select=*&order=id.asc`, {
+                    headers: { 'apikey': DB_KEY, 'Authorization': 'Bearer ' + DB_KEY }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    courses = data;
+                    localStorage.setItem('kristi_courses', JSON.stringify(courses));
+                    renderCoursesTable();
+                });
+
+                fetch(`${DB_URL}/rest/v1/leads?select=*&order=id.desc`, {
+                    headers: { 'apikey': DB_KEY, 'Authorization': 'Bearer ' + DB_KEY }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    leads = data;
+                    localStorage.setItem('kristi_leads', JSON.stringify(leads));
+                    if (leadsBlock.style.display === 'block') {
+                        renderLeadsTable();
+                    }
+                });
+            }
+
+            // Запуск синхронизации и первичного рендера
+            renderCoursesTable();
+            syncWithCloudDB();
         });
     </script>
 </body>
