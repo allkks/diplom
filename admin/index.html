@@ -144,17 +144,29 @@
     </div>
 
     <script>
+        // Инициализация локальной базы данных пользователей в системе
+        let usersDB = JSON.parse(localStorage.getItem('kristi_users'));
+        if (!usersDB) {
+            usersDB = [
+                { username: "admin@kristi.ru", password: "admin", name: "Иван Козлов" }
+            ];
+            localStorage.setItem('kristi_users', JSON.stringify(usersDB));
+        }
+
         document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            const u = document.getElementById('username').value;
-            const p = document.getElementById('password').value;
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value.trim();
             const error = document.getElementById('errorMsg');
 
-            // Проверка логина и пароля
-            if (u === 'admin@kristi.ru' && p === 'admin') {
+            // Поиск пользователя в нашей базе данных
+            const activeUser = usersDB.find(user => user.username === u && user.password === p);
+
+            if (activeUser) {
                 error.style.display = 'none';
-                sessionStorage.setItem('kristi_logged_in', 'true'); // Записываем сессию авторизации
-                window.location.href = '../dashboard.html'; // Перенаправляем в панель управления
+                sessionStorage.setItem('kristi_logged_in', 'true');
+                sessionStorage.setItem('kristi_user_name', activeUser.name);
+                window.location.href = '../dashboard.html';
             } else {
                 error.style.display = 'block';
             }
